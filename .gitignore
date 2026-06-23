@@ -1,0 +1,16 @@
+bin/
+obj/
+.idea/
+.vscode/
+appsettings.Development.json
+.env
+.env.*
+Migrations/*Snapshot.cs
+*.nupkg
+packages/
+docker-data/
+postgres-data/
+node_modules/
+TestResults/
+coverage/
+*.coverage

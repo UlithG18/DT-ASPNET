@@ -1,0 +1,6 @@
+@DT_ASPNET.Api_HostAddress = http://localhost:5059
+
+GET {{DT_ASPNET.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

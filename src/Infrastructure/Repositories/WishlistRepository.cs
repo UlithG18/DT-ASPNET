@@ -1,4 +1,4 @@
-using DT_ASPNET.Domain.Wishlist;
+using DT_ASPNET.Domain.Wishlists;
 using DT_ASPNET.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,13 +6,13 @@ namespace DT_ASPNET.Infrastructure.Repositories;
 
 public class WishlistRepository(AppDbContext db) : IWishlistRepository
 {
-    public Task<List<Domain.Wishlist.Wishlist>> GetByUserAsync(Guid userId) =>
+    public Task<List<Domain.Wishlists.Wishlist>> GetByUserAsync(Guid userId) =>
         db.Wishlists.Where(w => w.UserId == userId).ToListAsync();
 
     public Task<bool> ExistsAsync(Guid userId, Guid propertyId) =>
         db.Wishlists.AnyAsync(w => w.UserId == userId && w.PropertyId == propertyId);
 
-    public async Task AddAsync(Domain.Wishlist.Wishlist wishlist) =>
+    public async Task AddAsync(Domain.Wishlists.Wishlist wishlist) =>
         await db.Wishlists.AddAsync(wishlist);
 
     public async Task DeleteAsync(Guid userId, Guid propertyId)

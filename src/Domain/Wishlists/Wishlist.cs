@@ -1,4 +1,4 @@
-namespace DT_ASPNET.Domain.Wishlist;
+namespace DT_ASPNET.Domain.Wishlists;
 
 public class Wishlist
 {

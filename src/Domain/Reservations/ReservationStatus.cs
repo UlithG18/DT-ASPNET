@@ -1,4 +1,4 @@
-namespace DT_ASPNET.Domain.Reservation;
+namespace DT_ASPNET.Domain.Reservations;
 
 public enum ReservationStatus
 {

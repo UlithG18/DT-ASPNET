@@ -1,4 +1,4 @@
-namespace DT_ASPNET.Domain.Property;
+namespace DT_ASPNET.Domain.Properties;
 
 public interface IPropertyRepository
 {

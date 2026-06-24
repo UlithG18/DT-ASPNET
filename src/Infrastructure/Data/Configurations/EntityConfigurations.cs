@@ -1,8 +1,8 @@
-using DT_ASPNET.Domain.Notification;
-using DT_ASPNET.Domain.Property;
-using DT_ASPNET.Domain.Reservation;
-using DT_ASPNET.Domain.User;
-using DT_ASPNET.Domain.Wishlist;
+using DT_ASPNET.Domain.Notifications;
+using DT_ASPNET.Domain.Properties;
+using DT_ASPNET.Domain.Reservations;
+using DT_ASPNET.Domain.Users;
+using DT_ASPNET.Domain.Wishlists;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

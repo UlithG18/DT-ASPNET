@@ -1,4 +1,4 @@
-namespace DT_ASPNET.Domain.User;
+namespace DT_ASPNET.Domain.Users;
 
 public interface IUserRepository
 {

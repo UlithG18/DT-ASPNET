@@ -1,4 +1,4 @@
-namespace DT_ASPNET.Domain.Notification;
+namespace DT_ASPNET.Domain.Notifications;
 
 public enum NotificationType
 {

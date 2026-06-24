@@ -1,5 +1,5 @@
-using DT_ASPNET.Domain.Property;
-using DT_ASPNET.Domain.Reservation;
+using DT_ASPNET.Domain.Properties;
+using DT_ASPNET.Domain.Reservations;
 using DT_ASPNET.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,10 +7,10 @@ namespace DT_ASPNET.Infrastructure.Repositories;
 
 public class PropertyRepository(AppDbContext db) : IPropertyRepository
 {
-    public Task<Domain.Property.Property?> GetByIdAsync(Guid id) =>
+    public Task<Domain.Properties.Property?> GetByIdAsync(Guid id) =>
         db.Properties.FirstOrDefaultAsync(p => p.Id == id && p.IsActive);
 
-    public async Task<List<Domain.Property.Property>> SearchAsync(
+    public async Task<List<Domain.Properties.Property>> SearchAsync(
         string? city, DateOnly? checkIn, DateOnly? checkOut)
     {
         var query = db.Properties.Where(p => p.IsActive);
@@ -36,10 +36,10 @@ public class PropertyRepository(AppDbContext db) : IPropertyRepository
         return await query.ToListAsync();
     }
 
-    public Task<List<Domain.Property.Property>> GetByOwnerAsync(Guid ownerId) =>
+    public Task<List<Domain.Properties.Property>> GetByOwnerAsync(Guid ownerId) =>
         db.Properties.Where(p => p.OwnerId == ownerId).ToListAsync();
 
-    public async Task AddAsync(Domain.Property.Property property) =>
+    public async Task AddAsync(Domain.Properties.Property property) =>
         await db.Properties.AddAsync(property);
 
     public Task SaveChangesAsync() =>

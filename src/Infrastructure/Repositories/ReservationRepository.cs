@@ -1,4 +1,4 @@
-using DT_ASPNET.Domain.Reservation;
+using DT_ASPNET.Domain.Reservations;
 using DT_ASPNET.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 

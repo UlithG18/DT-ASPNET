@@ -11,7 +11,7 @@ public record RegisterRequest(string Email, string Password, string FirstName, s
 public record LoginRequest(string Email, string Password);
 public record AuthResponse(string AccessToken, string RefreshToken, Guid UserId, bool IsOwner);
 
-public class AuthService(IUserRepository users, IConfiguration config)
+public class AuthService(IUserRepository users, IConfiguration config) : IAuthService
 {
     public async Task<AuthResponse> RegisterAsync(RegisterRequest req)
     {

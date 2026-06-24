@@ -9,6 +9,7 @@ using DT_ASPNET.Domain.Reservations;
 using DT_ASPNET.Domain.Users;
 using DT_ASPNET.Domain.Wishlists;
 using DT_ASPNET.Infrastructure.Data;
+using DT_ASPNET.Infrastructure.Kyc;
 using DT_ASPNET.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -32,18 +33,21 @@ public static class DependencyInjection
         services.AddScoped<IWishlistRepository, WishlistRepository>();
         services.AddScoped<INotificationRepository, NotificationRepository>();
 
+        // KYC AI provider
+        services.AddScoped<IKycAiProvider, AiKycProvider>();
+
         return services;
     }
 
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        // Servicios
-        services.AddScoped<AuthService>();
-        services.AddScoped<KycService>();
-        services.AddScoped<PropertyService>();
-        services.AddScoped<ReservationService>();
-        services.AddScoped<WishlistService>();
-        services.AddScoped<NotificationService>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IKycService, KycService>();
+        services.AddScoped<IPropertyService, PropertyService>();
+        services.AddScoped<IReservationService, ReservationService>();
+        services.AddScoped<IWishlistService, WishlistService>();
+        services.AddScoped<INotificationService, NotificationService>();
 
         return services;
     }

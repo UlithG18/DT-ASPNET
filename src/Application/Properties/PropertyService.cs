@@ -14,7 +14,7 @@ public record CreatePropertyRequest(
     decimal PricePerNight, int MaxGuests, int Bedrooms, int Bathrooms,
     List<string> PhotoUrls);
 
-public class PropertyService(IPropertyRepository properties)
+public class PropertyService(IPropertyRepository properties) : IPropertyService
 {
     public async Task<List<PropertyDto>> SearchAsync(string? city, DateOnly? checkIn, DateOnly? checkOut)
     {

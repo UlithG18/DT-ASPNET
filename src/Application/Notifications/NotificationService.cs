@@ -4,7 +4,7 @@ namespace DT_ASPNET.Application.Notifications;
 
 public record NotificationDto(Guid Id, string Type, string Title, string Body, bool IsRead, DateTime CreatedAt);
 
-public class NotificationService(INotificationRepository notifications)
+public class NotificationService(INotificationRepository notifications) : INotificationService
 {
     public async Task<List<NotificationDto>> GetMyNotificationsAsync(Guid userId)
     {

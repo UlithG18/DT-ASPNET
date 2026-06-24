@@ -4,7 +4,7 @@ namespace DT_ASPNET.Application.Wishlists;
 
 public record WishlistItemDto(Guid PropertyId, DateTime SavedAt);
 
-public class WishlistService(IWishlistRepository wishlists)
+public class WishlistService(IWishlistRepository wishlists) : IWishlistService
 {
     public async Task ToggleAsync(Guid userId, Guid propertyId)
     {

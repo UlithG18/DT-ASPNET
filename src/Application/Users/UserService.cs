@@ -17,7 +17,7 @@ public record UpdateProfileRequest(
     string LastName,
     string? PhoneNumber);
 
-public class UserService(IUserRepository users)
+public class UserService(IUserRepository users) : IUserService
 {
     public async Task<UserProfileDto?> GetProfileAsync(Guid userId)
     {

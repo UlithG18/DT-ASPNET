@@ -15,7 +15,7 @@ public record KycExtractedData(
     string FirstName, string LastName,
     string DocumentNumber, DateOnly DateOfBirth);
 
-public class KycService(IUserRepository users, IKycAiProvider aiProvider)
+public class KycService(IUserRepository users, IKycAiProvider aiProvider) : IKycService
 {
     public async Task<KycResult> ProcessAsync(KycSubmitRequest req)
     {

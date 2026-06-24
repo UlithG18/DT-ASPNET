@@ -15,7 +15,7 @@ public class ReservationService(
     IReservationRepository reservations,
     Domain.Properties.IPropertyRepository properties,
     Domain.Users.IUserRepository users,
-    INotificationRepository notifications)
+    INotificationRepository notifications) : IReservationService
 {
     public async Task<ReservationDto> CreateAsync(Guid guestId, CreateReservationRequest req)
     {

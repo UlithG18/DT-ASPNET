@@ -6,7 +6,7 @@ namespace DT_ASPNET.Api.Controllers;
 
 [Route("api/kyc")]
 [Authorize]
-public class KycController(KycService kyc) : BaseController
+public class KycController(IKycService kyc) : BaseController
 {
     [HttpPost]
     public async Task<IActionResult> Submit(IFormFile document)

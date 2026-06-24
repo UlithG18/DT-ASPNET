@@ -28,6 +28,19 @@ public class ReservationRepository(AppDbContext db) : IReservationRepository
             r.CheckIn < checkOut &&
             r.CheckOut > checkIn);
 
+    public Task<List<Reservation>> GetByOwnerAsync(Guid ownerId, Guid? propertyId, DateTime? from, DateTime? to) =>
+    db.Reservations
+        .Include(r => r.Property)
+        .Include(r => r.Guest)
+        .Where(r =>
+            r.Property.OwnerId == ownerId &&
+            (propertyId == null || r.PropertyId == propertyId) &&
+            (from == null || r.CheckIn >= from) &&
+            (to == null || r.CheckOut <= to) &&
+            r.Status != ReservationStatus.Cancelled)
+        .OrderByDescending(r => r.CreatedAt)
+        .ToListAsync();
+
     public async Task AddAsync(Reservation reservation) =>
         await db.Reservations.AddAsync(reservation);
 

@@ -1,3 +1,4 @@
+using DT_ASPNET.Application.Notifications;
 using DT_ASPNET.Domain.Notifications;
 using DT_ASPNET.Domain.Reservations;
 using DT_ASPNET.Domain.Users;
@@ -15,7 +16,8 @@ public class ReservationService(
     IReservationRepository reservations,
     Domain.Properties.IPropertyRepository properties,
     Domain.Users.IUserRepository users,
-    INotificationRepository notifications) : IReservationService
+    INotificationRepository notifications,
+    IEmailService email) : IReservationService
 {
     public async Task<ReservationDto> CreateAsync(Guid guestId, CreateReservationRequest req)
     {
@@ -56,6 +58,18 @@ public class ReservationService(
             Body = $"Your stay at {property.Title} from {req.CheckIn} to {req.CheckOut} is confirmed."
         });
 
+        await email.SendAsync(
+            guest.Email,
+            $"{guest.FirstName} {guest.LastName}",
+            "Reserva confirmada ✅",
+            $"""
+            <h2>¡Tu reserva está confirmada!</h2>
+            <p>Propiedad: <strong>{property.Title}</strong></p>
+            <p>Check-in: <strong>{req.CheckIn:dd/MM/yyyy} a las 2:00 PM</strong></p>
+            <p>Check-out: <strong>{req.CheckOut:dd/MM/yyyy} a las 12:00 PM</strong></p>
+            <p>Total: <strong>${reservation.TotalAmount:N2}</strong></p>
+            """);
+
         await reservations.SaveChangesAsync();
 
         return ToDto(reservation);
@@ -65,16 +79,19 @@ public class ReservationService(
     {
         var reservation = await reservations.GetByIdAsync(reservationId)
             ?? throw new InvalidOperationException("Reservation not found.");
-
+    
         if (reservation.GuestId != guestId)
             throw new UnauthorizedAccessException("Not your reservation.");
-
+    
         if (reservation.Status == ReservationStatus.Cancelled)
             throw new InvalidOperationException("Reservation is already cancelled.");
-
+    
+        var guest = await users.GetByIdAsync(guestId)
+            ?? throw new InvalidOperationException("User not found.");
+    
         reservation.Status = ReservationStatus.Cancelled;
         reservation.CancellationReason = reason;
-
+    
         await notifications.AddAsync(new Domain.Notifications.Notification
         {
             UserId = guestId,
@@ -82,7 +99,16 @@ public class ReservationService(
             Title = "Reservation cancelled",
             Body = "Your reservation has been cancelled."
         });
-
+    
+        await email.SendAsync(
+            guest.Email,
+            $"{guest.FirstName} {guest.LastName}",
+            "Reserva cancelada",
+            $"""
+            <h2>Tu reserva ha sido cancelada</h2>
+            {(reason is not null ? $"<p>Motivo: {reason}</p>" : "")}
+            """);
+    
         await reservations.SaveChangesAsync();
     }
 

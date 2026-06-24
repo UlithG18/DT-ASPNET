@@ -10,6 +10,7 @@ namespace DT_ASPNET.Application.Users;
 public record RegisterRequest(string Email, string Password, string FirstName, string LastName);
 public record LoginRequest(string Email, string Password);
 public record AuthResponse(string AccessToken, string RefreshToken, Guid UserId, bool IsOwner);
+public record RefreshRequest(string RefreshToken);
 
 public class AuthService(IUserRepository users, IConfiguration config) : IAuthService
 {
@@ -71,5 +72,22 @@ public class AuthService(IUserRepository users, IConfiguration config) : IAuthSe
         var refreshToken = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
 
         return new AuthResponse(accessToken, refreshToken, user.Id, user.IsOwner);
+    }
+
+    public async Task<AuthResponse> RefreshAsync(RefreshRequest req)
+    {
+        var user = await users.GetByRefreshTokenAsync(req.RefreshToken)
+            ?? throw new UnauthorizedAccessException("Invalid refresh token.");
+    
+        if (user.RefreshTokenExpiresAt < DateTime.UtcNow)
+            throw new UnauthorizedAccessException("Refresh token expired.");
+    
+        var tokens = BuildTokens(user);
+    
+        user.RefreshToken = tokens.RefreshToken;
+        user.RefreshTokenExpiresAt = DateTime.UtcNow.AddDays(30);
+        await users.SaveChangesAsync();
+    
+        return tokens;
     }
 }

@@ -38,4 +38,8 @@ public class Reservation
             TotalAmount = pricePerNight * nights
         };
     }
+
+    // Navigation properties
+    public Domain.Properties.Property Property { get; set; } = null!;
+    public Domain.Users.User Guest { get; set; } = null!;
 }

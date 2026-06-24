@@ -11,6 +11,7 @@ using DT_ASPNET.Domain.Wishlists;
 using DT_ASPNET.Infrastructure.Data;
 using DT_ASPNET.Infrastructure.Kyc;
 using DT_ASPNET.Infrastructure.Repositories;
+using DT_ASPNET.Infrastructure.Email;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,6 +49,8 @@ public static class DependencyInjection
         services.AddScoped<IReservationService, ReservationService>();
         services.AddScoped<IWishlistService, WishlistService>();
         services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<IReportService, ReportService>();
+        services.AddScoped<IEmailService, EmailService>();
 
         return services;
     }

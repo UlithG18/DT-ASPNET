@@ -6,7 +6,7 @@ namespace DT_ASPNET.Api.Controllers;
 
 [Route("api/notifications")]
 [Authorize]
-public class NotificationsController(NotificationService notifications) : BaseController
+public class NotificationsController(INotificationService notifications) : BaseController
 {
     [HttpGet]
     public async Task<IActionResult> GetMine()

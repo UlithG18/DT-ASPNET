@@ -6,7 +6,7 @@ namespace DT_ASPNET.Api.Controllers;
 
 [Route("api/reservations")]
 [Authorize]
-public class ReservationsController(ReservationService reservations) : BaseController
+public class ReservationsController(IReservationService reservations) : BaseController
 {
     [HttpGet]
     public async Task<IActionResult> GetMine()

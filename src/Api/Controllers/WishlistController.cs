@@ -6,7 +6,7 @@ namespace DT_ASPNET.Api.Controllers;
 
 [Route("api/wishlist")]
 [Authorize]
-public class WishlistController(WishlistService wishlist) : BaseController
+public class WishlistController(IWishlistService wishlist) : BaseController
 {
     [HttpGet]
     public async Task<IActionResult> GetMine()

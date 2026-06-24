@@ -1,0 +1,40 @@
+# Compilados
+**/bin/
+**/obj/
+
+# Dependencias
+**/node_modules/
+**/vendor/
+
+# Variables de entorno
+.env
+*.env
+
+# Secretos y configuración local
+**/appsettings.Development.json
+**/*.user
+**/*.suo
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vs/
+.vscode/
+.idea/
+**/*.DotSettings
+
+# Tests
+**/TestResults/
+
+# Logs
+**/*.log
+
+# Docker mismo
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# README
+README.md

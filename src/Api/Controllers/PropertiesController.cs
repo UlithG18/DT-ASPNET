@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DT_ASPNET.Api.Controllers;
 
 [Route("api/properties")]
-public class PropertiesController(PropertyService properties) : BaseController
+public class PropertiesController(IPropertyService properties) : BaseController
 {
     // Público — no requiere login
     [HttpGet]

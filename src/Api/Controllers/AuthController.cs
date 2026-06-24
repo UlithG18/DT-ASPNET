@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DT_ASPNET.Api.Controllers;
 
 [Route("api/auth")]
-public class AuthController(AuthService auth) : BaseController
+public class AuthController(IAuthService auth) : BaseController
 {
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest req)
@@ -26,6 +26,20 @@ public class AuthController(AuthService auth) : BaseController
         try
         {
             var result = await auth.LoginAsync(req);
+            return Ok(result);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { error = ex.Message });
+        }
+    }
+
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh(RefreshRequest req)
+    {
+        try
+        {
+            var result = await auth.RefreshAsync(req);
             return Ok(result);
         }
         catch (UnauthorizedAccessException ex)

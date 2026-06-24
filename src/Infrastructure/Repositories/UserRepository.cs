@@ -12,6 +12,9 @@ public class UserRepository(AppDbContext db) : IUserRepository
     public Task<Domain.Users.User?> GetByEmailAsync(string email) =>
         db.Users.FirstOrDefaultAsync<User>(u => u.Email == email);
 
+    public Task<User?> GetByRefreshTokenAsync(string refreshToken) =>
+    db.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+
     public async Task AddAsync(Domain.Users.User user) =>
         await db.Users.AddAsync(user);
 

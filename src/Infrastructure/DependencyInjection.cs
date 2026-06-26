@@ -12,6 +12,7 @@ using DT_ASPNET.Infrastructure.Data;
 using DT_ASPNET.Infrastructure.Kyc;
 using DT_ASPNET.Infrastructure.Repositories;
 using DT_ASPNET.Infrastructure.Email;
+using DT_ASPNET.Application.Dashboard;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,6 +52,7 @@ public static class DependencyInjection
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<IReportService, ReportService>();
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IDashboardService, DashboardService>();
 
         return services;
     }

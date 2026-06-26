@@ -1,0 +1,50 @@
+@model List<PropertyDto>
+@{ ViewData["Title"] = "Mis inmuebles"; }
+
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Mis inmuebles</div>
+      <div class="page-subtitle">@Model.Count publicado(s)</div>
+    </div>
+    <a href="/properties/create" class="btn btn-primary">+ Publicar inmueble</a>
+  </div>
+
+  @if (!Model.Any())
+  {
+    <div class="card" style="text-align:center;padding:3rem">
+      <div style="font-size:3rem;margin-bottom:.75rem">🏗️</div>
+      <div style="font-weight:600;margin-bottom:.5rem">Aún no tienes inmuebles publicados</div>
+      <div class="text-muted" style="margin-bottom:1.25rem">Publica tu primer inmueble y empieza a recibir reservas</div>
+      <a href="/properties/create" class="btn btn-primary">Publicar ahora</a>
+    </div>
+  }
+  else
+  {
+    <div class="property-grid">
+      @foreach (var p in Model)
+      {
+        <div class="property-card">
+          @if (p.PhotoUrls.Any())
+          {
+            <img class="property-img" src="@p.PhotoUrls[0]" alt="@p.Title"
+                 style="height:160px;width:100%;object-fit:cover;" />
+          }
+          else
+          {
+            <div class="property-img" style="height:160px">🏠</div>
+          }
+          <div class="property-body">
+            <div class="property-title">@p.Title</div>
+            <div class="property-meta">📍 @p.City · @p.Bedrooms hab · @p.Bathrooms baño(s)</div>
+            <div class="property-price">$@p.PricePerNight.ToString("N0") <span>/ noche</span></div>
+            <div class="mt-2" style="display:flex;gap:.5rem">
+              <a href="/properties/@p.Id" class="btn btn-outline btn-sm">Ver</a>
+              <a href="/reservations/property/@p.Id" class="btn btn-outline btn-sm">Reservas</a>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,78 @@
+@model List<ReservationDto>
+@{ ViewData["Title"] = "Mis reservas"; }
+
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Mis reservas</div>
+      <div class="page-subtitle">@Model.Count reserva(s) en total</div>
+    </div>
+    <a href="/" class="btn btn-outline">Explorar más</a>
+  </div>
+
+  @if (!Model.Any())
+  {
+    <div class="card" style="text-align:center;padding:3rem">
+      <div style="font-size:3rem;margin-bottom:.75rem">🗓️</div>
+      <div style="font-weight:600;margin-bottom:.5rem">Sin reservas aún</div>
+      <div class="text-muted" style="margin-bottom:1.25rem">Explora el catálogo y reserva tu próxima estadía</div>
+      <a href="/" class="btn btn-primary">Explorar inmuebles</a>
+    </div>
+  }
+  else
+  {
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Inmueble</th>
+            <th>Check-in</th>
+            <th>Check-out</th>
+            <th>Noches</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var r in Model.OrderByDescending(x => x.CheckIn))
+          {
+            <tr>
+              <td>
+                <a href="/properties/@r.PropertyId">@r.PropertyId.ToString()[..8]…</a>
+              </td>
+              <td>@r.CheckIn.ToString("dd MMM yyyy") <span class="text-muted" style="font-size:.75rem">14:00</span></td>
+              <td>@r.CheckOut.ToString("dd MMM yyyy") <span class="text-muted" style="font-size:.75rem">12:00</span></td>
+              <td>@r.TotalNights</td>
+              <td><strong>$@r.TotalAmount.ToString("N0")</strong></td>
+              <td>
+                @{
+                  var cls = r.Status switch {
+                    "Confirmed" => "badge-green",
+                    "Cancelled" => "badge-red",
+                    _ => "badge-amber"
+                  };
+                  var label = r.Status switch {
+                    "Confirmed" => "Confirmada",
+                    "Cancelled" => "Cancelada",
+                    _ => r.Status
+                  };
+                }
+                <span class="badge @cls">@label</span>
+              </td>
+              <td>
+                @if (r.Status == "Confirmed" && r.CheckIn > DateTime.UtcNow)
+                {
+                  <form method="post" action="/reservations/@r.Id/cancel"
+                        onsubmit="return confirm('¿Cancelar esta reserva?')">
+                    <button type="submit" class="btn btn-danger btn-sm">Cancelar</button>
+                  </form>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

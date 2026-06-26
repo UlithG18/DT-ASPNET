@@ -1,0 +1,67 @@
+@model List<PropertyDto>
+@{ ViewData["Title"] = "Explorar inmuebles"; }
+
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Encuentra tu próxima estadía</div>
+      <div class="page-subtitle">Filtra por ciudad y fechas para ver disponibilidad en tiempo real</div>
+    </div>
+  </div>
+
+  <form method="get" action="/" class="search-bar">
+    <div class="form-group">
+      <label for="city">Ciudad</label>
+      <input id="city" name="city" type="text" placeholder="Medellín, Bogotá…" value="@ViewBag.City" />
+    </div>
+    <div class="form-group">
+      <label for="checkIn">Check-in</label>
+      <input id="checkIn" name="checkIn" type="date" value="@ViewBag.CheckIn" />
+    </div>
+    <div class="form-group">
+      <label for="checkOut">Check-out</label>
+      <input id="checkOut" name="checkOut" type="date" value="@ViewBag.CheckOut" />
+    </div>
+    <div class="form-group" style="display:flex;align-items:flex-end;min-width:auto">
+      <button type="submit" class="btn btn-primary">🔍 Buscar</button>
+    </div>
+  </form>
+
+  @if (!Model.Any())
+  {
+    <div class="card" style="text-align:center;padding:3rem">
+      <div style="font-size:3rem;margin-bottom:.75rem">🏘️</div>
+      <div style="font-weight:600;margin-bottom:.5rem">Sin resultados</div>
+      <div class="text-muted">Prueba con otra ciudad o cambia las fechas</div>
+    </div>
+  }
+  else
+  {
+    <div style="margin-bottom:.75rem" class="text-muted">@Model.Count inmueble(s) disponible(s)</div>
+    <div class="property-grid">
+      @foreach (var p in Model)
+      {
+        <div class="property-card">
+          @if (p.PhotoUrls.Any())
+          {
+            <img class="property-img" src="@p.PhotoUrls[0]" alt="@p.Title" style="height:180px;width:100%;object-fit:cover;" />
+          }
+          else
+          {
+            <div class="property-img">🏠</div>
+          }
+          <div class="property-body">
+            <div class="property-title">@p.Title</div>
+            <div class="property-meta">📍 @p.City · @p.Bedrooms hab · @p.Bathrooms baño(s) · máx @p.MaxGuests huéspedes</div>
+            <div class="property-price">
+              $@p.PricePerNight.ToString("N0") <span>/ noche</span>
+            </div>
+            <div class="mt-2" style="display:flex;gap:.5rem">
+              <a href="/properties/@p.Id" class="btn btn-outline btn-sm w-full">Ver detalle</a>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,39 @@
+@model UserProfileDto
+@{ ViewData["Title"] = "Verificación de identidad"; }
+
+<div class="page" style="max-width:560px">
+  <div class="page-title" style="margin-bottom:.5rem">Verificación de identidad</div>
+  <div class="text-muted" style="margin-bottom:1.5rem">Sube una foto de tu cédula para verificar tu identidad con IA</div>
+
+  @if (Model?.KycStatus == "Approved")
+  {
+    <div class="card" style="text-align:center;padding:2.5rem">
+      <div style="font-size:3rem;margin-bottom:.75rem">✅</div>
+      <div style="font-weight:600;margin-bottom:.5rem">Identidad verificada</div>
+      <div class="text-muted">Tu documento fue validado correctamente.</div>
+    </div>
+  }
+  else
+  {
+    @if (Model?.KycStatus == "Rejected")
+    {
+      <div class="alert alert-error" style="margin-bottom:1rem">
+        ✕ Rechazado: @Model.KycRejectionReason
+      </div>
+    }
+
+    <div class="card">
+      <form method="post" action="/kyc" enctype="multipart/form-data">
+        <div class="form-group">
+          <label>Foto de tu cédula</label>
+          <input name="document" type="file" accept="image/*" required
+                 style="padding:.5rem" />
+        </div>
+        <div class="alert alert-success" style="font-size:.8rem;margin-bottom:1rem">
+          🔒 Tu documento se procesa en memoria y nunca se almacena en disco.
+        </div>
+        <button type="submit" class="btn btn-primary w-full">Verificar identidad</button>
+      </form>
+    </div>
+  }
+</div>

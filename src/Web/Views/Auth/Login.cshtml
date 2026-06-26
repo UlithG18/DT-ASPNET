@@ -1,0 +1,34 @@
+@{ ViewData["Title"] = "Iniciar sesión"; Layout = "_Layout"; }
+
+<div class="page-sm">
+  <div class="auth-box">
+    <div class="auth-title">Bienvenido de vuelta</div>
+    <div class="auth-sub">Inicia sesión para gestionar tus reservas</div>
+
+    @if (ViewBag.Error != null)
+    {
+      <div class="alert alert-error">@ViewBag.Error</div>
+    }
+
+    <form method="post" action="/auth/login">
+      <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+
+      <div class="form-group">
+        <label for="email">Correo electrónico</label>
+        <input id="email" name="email" type="email" required placeholder="tu@correo.com" />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input id="password" name="password" type="password" required placeholder="••••••••" />
+      </div>
+
+      <button type="submit" class="btn btn-primary w-full" style="margin-top:.5rem">Iniciar sesión</button>
+    </form>
+
+    <hr class="divider" />
+    <div class="text-muted" style="text-align:center;font-size:.85rem">
+      ¿No tienes cuenta? <a href="/auth/register">Regístrate gratis</a>
+    </div>
+  </div>
+</div>

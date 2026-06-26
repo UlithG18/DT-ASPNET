@@ -1,0 +1,50 @@
+@model List<WishlistItemDto>
+@{ ViewData["Title"] = "Mis favoritos"; }
+
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Mis favoritos</div>
+      <div class="page-subtitle">@Model.Count inmueble(s) guardado(s)</div>
+    </div>
+    <a href="/" class="btn btn-outline">Explorar más</a>
+  </div>
+
+  @if (!Model.Any())
+  {
+    <div class="card" style="text-align:center;padding:3rem">
+      <div style="font-size:3rem;margin-bottom:.75rem">🤍</div>
+      <div style="font-weight:600;margin-bottom:.5rem">Sin favoritos aún</div>
+      <div class="text-muted" style="margin-bottom:1.25rem">Guarda inmuebles para encontrarlos fácilmente después</div>
+      <a href="/" class="btn btn-primary">Explorar inmuebles</a>
+    </div>
+  }
+  else
+  {
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Inmueble</th>
+            <th>Guardado</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var item in Model)
+          {
+            <tr>
+              <td><a href="/properties/@item.PropertyId">Ver inmueble</a></td>
+              <td class="text-muted">@item.SavedAt.ToString("dd MMM yyyy")</td>
+              <td>
+                <form method="post" action="/wishlist/toggle/@item.PropertyId?returnUrl=/wishlist">
+                  <button type="submit" class="btn btn-danger btn-sm">Quitar</button>
+                </form>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

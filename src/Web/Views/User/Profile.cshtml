@@ -1,0 +1,74 @@
+@model UserProfileDto
+@{ ViewData["Title"] = "Mi perfil"; }
+
+<div class="page" style="max-width:600px">
+  <div class="page-title" style="margin-bottom:1.5rem">Mi perfil</div>
+
+  <div class="card" style="margin-bottom:1rem">
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+      <div style="width:56px;height:56px;border-radius:50%;background:var(--accent-bg);display:flex;align-items:center;justify-content:center;font-size:1.5rem">
+        👤
+      </div>
+      <div>
+        <div style="font-weight:700;font-size:1.1rem">@Model.FirstName @Model.LastName</div>
+        <div class="text-muted">@Model.Email</div>
+      </div>
+      <div style="margin-left:auto">
+        @{
+          var kycCls = Model.KycStatus == "Approved" ? "badge-green"
+                     : Model.KycStatus == "Rejected" ? "badge-red" : "badge-amber";
+        }
+        <span class="badge @kycCls">KYC: @Model.KycStatus</span>
+      </div>
+    </div>
+
+    <form method="post" action="/profile">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input name="firstName" type="text" required value="@Model.FirstName" />
+        </div>
+        <div class="form-group">
+          <label>Apellido</label>
+          <input name="lastName" type="text" required value="@Model.LastName" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Teléfono</label>
+        <input name="phoneNumber" type="tel" value="@Model.PhoneNumber" placeholder="+57 300 000 0000" />
+      </div>
+      <div style="display:flex;justify-content:flex-end">
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card" style="margin-bottom:1rem">
+    <div style="font-weight:600;margin-bottom:.75rem">Verificación de identidad (KYC)</div>
+    @if (Model.KycStatus == "Approved")
+    {
+      <div class="alert alert-success">✓ Identidad verificada. Puedes hacer reservas.</div>
+    }
+    else
+    {
+      <div class="text-muted" style="margin-bottom:.75rem;font-size:.875rem">
+        Necesitas verificar tu identidad antes de poder reservar.
+      </div>
+      <a href="/kyc" class="btn btn-outline">Verificar identidad</a>
+    }
+  </div>
+
+  @if (!Model.IsOwner)
+  {
+    <div class="card">
+      <div style="font-weight:600;margin-bottom:.5rem">¿Tienes propiedades?</div>
+      <div class="text-muted" style="margin-bottom:.75rem;font-size:.875rem">
+        Conviértete en propietario para publicar inmuebles y ver tu dashboard.
+      </div>
+      <form method="post" action="/profile/become-owner"
+            onsubmit="return confirm('¿Convertirte en propietario?')">
+        <button type="submit" class="btn btn-primary">Ser propietario</button>
+      </form>
+    </div>
+  }
+</div>

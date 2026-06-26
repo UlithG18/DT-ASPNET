@@ -13,7 +13,10 @@ public class ReportService(IReservationRepository reservations) : IReportService
     public async Task<byte[]> GenerateExcelAsync(
         Guid ownerId, Guid? propertyId, DateTime? from, DateTime? to)
     {
-        var data = await reservations.GetByOwnerAsync(ownerId, propertyId, from, to);
+        var fromUtc = (from ?? DateTime.UtcNow.AddMonths(-12)).ToUniversalTime();
+        var toUtc   = (to   ?? DateTime.UtcNow).ToUniversalTime();
+        
+        var data = await reservations.GetByOwnerAsync(ownerId, propertyId, fromUtc, toUtc);
 
         using var wb = new XLWorkbook();
         var ws = wb.Worksheets.Add("Reservas");

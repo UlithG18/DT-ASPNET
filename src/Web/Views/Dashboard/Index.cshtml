@@ -1,0 +1,179 @@
+@model DashboardDto
+@{ ViewData["Title"] = "Dashboard"; }
+
+<div class="page">
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <div class="page-title">Dashboard de rendimiento</div>
+      <div class="page-subtitle">Métricas de tu portafolio en el período seleccionado</div>
+    </div>
+    <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+      <a href="/dashboard/excel?from=@ViewBag.From&to=@ViewBag.To" class="btn btn-success">
+        ⬇ Exportar Excel
+      </a>
+    </div>
+  </div>
+
+  <!-- Filtro de fechas -->
+  <form method="get" action="/dashboard" class="card" style="padding:1rem;margin-bottom:1.5rem">
+    <div style="display:flex;gap:.75rem;align-items:flex-end;flex-wrap:wrap">
+      <div class="form-group" style="margin:0;flex:1;min-width:160px">
+        <label for="from">Desde</label>
+        <input id="from" name="from" type="date" value="@ViewBag.From" />
+      </div>
+      <div class="form-group" style="margin:0;flex:1;min-width:160px">
+        <label for="to">Hasta</label>
+        <input id="to" name="to" type="date" value="@ViewBag.To" />
+      </div>
+      <button type="submit" class="btn btn-primary">Actualizar</button>
+      <a href="/dashboard" class="btn btn-outline">Últimos 12 meses</a>
+    </div>
+  </form>
+
+  <!-- KPIs -->
+  <div class="stats-grid">
+    <div class="stat">
+      <div class="stat-icon">🏠</div>
+      <div class="stat-label">Inmuebles activos</div>
+      <div class="stat-value">@Model.TotalProperties</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">📅</div>
+      <div class="stat-label">Reservas confirmadas</div>
+      <div class="stat-value">@Model.TotalReservations</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">💰</div>
+      <div class="stat-label">Ingresos totales</div>
+      <div class="stat-value">$@Model.TotalRevenue.ToString("N0")</div>
+      <div class="stat-sub">COP</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">📊</div>
+      <div class="stat-label">Ocupación promedio</div>
+      <div class="stat-value">@Model.AverageOccupancy.ToString("N1")%</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.5rem" class="dash-grid">
+
+    <!-- Gráfico de ingresos mensuales -->
+    <div class="card">
+      <div style="font-weight:600;margin-bottom:1.25rem">Ingresos por mes</div>
+      @if (!Model.RevenueByMonth.Any())
+      {
+        <div class="text-muted" style="text-align:center;padding:2rem 0">Sin datos en el período</div>
+      }
+      else
+      {
+        var maxRev = Model.RevenueByMonth.Any()
+          ? Model.RevenueByMonth.Max(m => m.Revenue)
+          : 1;
+
+        <div class="bar-chart" style="height:140px">
+          @foreach (var m in Model.RevenueByMonth)
+          {
+            var height = maxRev > 0 ? (double)m.Revenue / (double)maxRev * 100 : 0;
+            <div class="bar-col" title="@m.Month: $@m.Revenue.ToString("N0")">
+              <div class="bar" style="height:@height.ToString("F0")%;min-height:4px"></div>
+              <div class="bar-label">@m.Month.Split(' ')[0]</div>
+            </div>
+          }
+        </div>
+        <div class="text-muted" style="font-size:.75rem;margin-top:.75rem;text-align:center">
+          Total: $@Model.TotalRevenue.ToString("N0") · @Model.TotalReservations reserva(s)
+        </div>
+      }
+    </div>
+
+    <!-- Resumen rápido -->
+    <div class="card">
+      <div style="font-weight:600;margin-bottom:1rem">Últimas reservas por mes</div>
+      @if (!Model.RevenueByMonth.Any())
+      {
+        <div class="text-muted" style="text-align:center;padding:2rem 0">Sin reservas en el período</div>
+      }
+      else
+      {
+        <div class="table-wrap" style="border:none">
+          <table>
+            <thead>
+              <tr>
+                <th>Mes</th>
+                <th class="text-right">Reservas</th>
+                <th class="text-right">Ingresos</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach (var m in Model.RevenueByMonth.TakeLast(6).Reverse())
+              {
+                <tr>
+                  <td>@m.Month</td>
+                  <td class="text-right">@m.Reservations</td>
+                  <td class="text-right"><strong>$@m.Revenue.ToString("N0")</strong></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Breakdown por inmueble -->
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
+      <div style="font-weight:600">Rendimiento por inmueble</div>
+      <a href="/properties/mine" class="btn btn-outline btn-sm">Gestionar inmuebles</a>
+    </div>
+
+    @if (!Model.PropertiesBreakdown.Any())
+    {
+      <div class="text-muted" style="text-align:center;padding:2rem 0">
+        Aún no tienes inmuebles publicados.
+        <a href="/properties/create">Publicar ahora</a>
+      </div>
+    }
+    else
+    {
+      <div class="table-wrap" style="border:none">
+        <table>
+          <thead>
+            <tr>
+              <th>Inmueble</th>
+              <th>Ciudad</th>
+              <th class="text-right">Reservas</th>
+              <th class="text-right">Ingresos</th>
+              <th class="text-right">Ocupación</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var p in Model.PropertiesBreakdown.OrderByDescending(x => x.TotalRevenue))
+            {
+              <tr>
+                <td><strong>@p.Title</strong></td>
+                <td>@p.City</td>
+                <td class="text-right">@p.TotalReservations</td>
+                <td class="text-right">$@p.TotalRevenue.ToString("N0")</td>
+                <td class="text-right">
+                  @{
+                    var occClass = p.OccupancyRate >= 60 ? "badge-green"
+                                  : p.OccupancyRate >= 30 ? "badge-amber"
+                                  : "badge-red";
+                  }
+                  <span class="badge @occClass">@p.OccupancyRate.ToString("N1")%</span>
+                </td>
+                <td>
+                  <a href="/dashboard/excel?propertyId=@p.PropertyId&from=@ViewBag.From&to=@ViewBag.To"
+                     class="btn btn-outline btn-sm" title="Exportar este inmueble">⬇</a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>

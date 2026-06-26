@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>@ViewData["Title"] — Nestly</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="/">🏠 Nestly</a>
+  <ul class="nav-links">
+    <li><a href="/" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Index" && ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">Explorar</a></li>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+      <li><a href="/reservations">Mis reservas</a></li>
+      <li><a href="/notifications">Notificaciones</a></li>
+      <li><a href="/profile">Mi perfil</a></li>
+      <li><a href="/wishlist">Favoritos</a></li>
+      @if (User.IsInRole("Owner"))
+      {
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/properties/mine">Mis inmuebles</a></li>
+      }
+      <li><a href="/auth/logout" class="btn btn-outline btn-sm">Salir</a></li>
+    }
+    else
+    {
+      <li><a href="/auth/login" class="btn btn-outline btn-sm">Iniciar sesión</a></li>
+      <li><a href="/auth/register" class="btn btn-primary btn-sm">Registrarse</a></li>
+    }
+  </ul>
+</nav>
+
+<main>
+  @if (TempData["Success"] != null)
+  {
+    <div style="max-width:1160px;margin:.75rem auto;padding:0 1.5rem">
+      <div class="alert alert-success">✓ @TempData["Success"]</div>
+    </div>
+  }
+  @if (TempData["Error"] != null)
+  {
+    <div style="max-width:1160px;margin:.75rem auto;padding:0 1.5rem">
+      <div class="alert alert-error">✕ @TempData["Error"]</div>
+    </div>
+  }
+
+  @RenderBody()
+</main>
+
+</body>
+</html>

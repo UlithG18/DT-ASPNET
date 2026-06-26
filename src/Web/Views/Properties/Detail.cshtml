@@ -1,0 +1,73 @@
+@model PropertyDto
+@{ ViewData["Title"] = Model.Title; }
+
+<div class="page">
+  <div style="margin-bottom:1rem">
+    <a href="/" class="text-muted" style="font-size:.875rem">← Volver al catálogo</a>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 340px;gap:1.5rem;align-items:start" class="detail-grid">
+    <!-- Lado izquierdo -->
+    <div>
+      @if (Model.PhotoUrls.Any())
+      {
+        <img src="@Model.PhotoUrls[0]" alt="@Model.Title"
+             style="width:100%;height:320px;object-fit:cover;border-radius:12px;margin-bottom:1rem;" />
+      }
+      else
+      {
+        <div class="property-img" style="height:280px;border-radius:12px;margin-bottom:1rem;font-size:5rem">🏠</div>
+      }
+
+      <h1 style="font-size:1.5rem;font-weight:700;margin-bottom:.25rem">@Model.Title</h1>
+      <div class="text-muted" style="margin-bottom:1rem">📍 @Model.City — @Model.Address</div>
+
+      <div style="display:flex;gap:1.5rem;margin-bottom:1.25rem;flex-wrap:wrap">
+        <span class="badge badge-blue">@Model.Bedrooms hab.</span>
+        <span class="badge badge-blue">@Model.Bathrooms baño(s)</span>
+        <span class="badge badge-blue">Máx @Model.MaxGuests huéspedes</span>
+      </div>
+
+      <div class="card">
+        <div style="font-weight:600;margin-bottom:.5rem">Descripción</div>
+        <p class="text-muted">@Model.Description</p>
+      </div>
+    </div>
+
+    <!-- Lado derecho — Reserva -->
+    <div class="card" style="position:sticky;top:80px">
+      <div class="property-price" style="font-size:1.5rem;margin-bottom:1rem">
+        $@Model.PricePerNight.ToString("N0") <span>/ noche</span>
+      </div>
+
+      @if (User.Identity?.IsAuthenticated == true)
+      {
+        <form method="post" action="/properties/@Model.Id/reserve">
+          <div class="form-group">
+            <label for="checkIn">Check-in</label>
+            <input id="checkIn" name="checkIn" type="date" required
+                   min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+          </div>
+          <div class="form-group">
+            <label for="checkOut">Check-out</label>
+            <input id="checkOut" name="checkOut" type="date" required
+                   min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" />
+          </div>
+          <div class="alert alert-success" style="font-size:.8rem;margin-bottom:.75rem">
+            ⏰ Check-in a las 2:00 PM · Check-out a las 12:00 PM
+          </div>
+          <button type="submit" class="btn btn-primary w-full">Reservar ahora</button>
+        </form>
+      }
+      else
+      {
+        <div class="alert alert-error" style="margin-bottom:.75rem;font-size:.85rem">
+          Debes iniciar sesión para reservar
+        </div>
+        <a href="/auth/login?returnUrl=/properties/@Model.Id" class="btn btn-primary w-full">
+          Iniciar sesión
+        </a>
+      }
+    </div>
+  </div>
+</div>

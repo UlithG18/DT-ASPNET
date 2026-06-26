@@ -1,0 +1,67 @@
+@{ ViewData["Title"] = "Publicar inmueble"; }
+
+<div class="page" style="max-width:680px">
+  <div style="margin-bottom:1rem">
+    <a href="/properties/mine" class="text-muted" style="font-size:.875rem">← Mis inmuebles</a>
+  </div>
+
+  <div class="page-header">
+    <div class="page-title">Publicar inmueble</div>
+  </div>
+
+  <div class="card">
+    <form method="post" action="/properties/create">
+      <div class="form-group">
+        <label for="title">Título</label>
+        <input id="title" name="title" type="text" required placeholder="Ej: Apartamento moderno en el Poblado" />
+      </div>
+
+      <div class="form-group">
+        <label for="description">Descripción</label>
+        <textarea id="description" name="description" required
+                  placeholder="Describe el inmueble, amenidades, reglas…"></textarea>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
+        <div class="form-group">
+          <label for="city">Ciudad</label>
+          <input id="city" name="city" type="text" required placeholder="Medellín" />
+        </div>
+        <div class="form-group">
+          <label for="address">Dirección</label>
+          <input id="address" name="address" type="text" required placeholder="Cra 43A #1-50" />
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem">
+        <div class="form-group">
+          <label for="pricePerNight">Precio / noche ($)</label>
+          <input id="pricePerNight" name="pricePerNight" type="number" required min="1" placeholder="150000" />
+        </div>
+        <div class="form-group">
+          <label for="maxGuests">Huéspedes</label>
+          <input id="maxGuests" name="maxGuests" type="number" required min="1" value="2" />
+        </div>
+        <div class="form-group">
+          <label for="bedrooms">Habitaciones</label>
+          <input id="bedrooms" name="bedrooms" type="number" required min="1" value="1" />
+        </div>
+        <div class="form-group">
+          <label for="bathrooms">Baños</label>
+          <input id="bathrooms" name="bathrooms" type="number" required min="1" value="1" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="photoUrlsRaw">URLs de fotos <span style="font-weight:400;text-transform:none">(una por línea)</span></label>
+        <textarea id="photoUrlsRaw" name="photoUrlsRaw" rows="3"
+                  placeholder="https://ejemplo.com/foto1.jpg&#10;https://ejemplo.com/foto2.jpg"></textarea>
+      </div>
+
+      <div style="display:flex;gap:.75rem;justify-content:flex-end;margin-top:.5rem">
+        <a href="/properties/mine" class="btn btn-outline">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Publicar inmueble</button>
+      </div>
+    </form>
+  </div>
+</div>
